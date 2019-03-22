@@ -1,0 +1,45 @@
+
+# This file is specially made for running the local deploit in production mode.
+#
+version: '3'
+
+volumes:
+
+  # Stores all the nextflow jobs being run by the user through deploit.
+  # Defaults to /home/deploit/data
+  # Jobs are stored at /home/deploit/data/.deploit
+  user_data:
+
+services:
+
+  mongo:
+    image: mongo:3.4-jessie
+
+  api-server:
+    image: <PATH_TO_IMAGE>
+    container_name: api-server
+    hostname: api-server
+    restart: always
+    ports:
+      - '3002:3002'
+    env_file:
+      - ./api-server/config/config.env
+    environment:
+      - LIFEBIT_MONGODB_URI=mongodb://mongo:27017/lifebit-biotech
+      - IP=0.0.0.0
+      - PATH_PREFIX=/api/v1
+      - RUN_MODE=production
+
+    volumes:
+      - user_data:/home/deploit/data
+      - ${LOCAL_DATA_DIR:-~/}:/input_data
+
+  web-application:
+    image: <PATH_TO_IMAGE>
+    container_name: web-application
+    environment:
+      - RUN_MODE=production
+    ports:
+      - '3000:3000'
+    volumes:
+      - ${WEB_APP_ENV_FILE:-../web-application/config/.env.production}:/usr/src/app/.env.production
