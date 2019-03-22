@@ -23,7 +23,7 @@ services:
     ports:
       - '3002:3002'
     env_file:
-      - ./api-server/config/config.env
+      - ./config/api-server/config.env
     environment:
       - LIFEBIT_MONGODB_URI=mongodb://mongo:27017/lifebit-biotech
       - IP=0.0.0.0
@@ -42,4 +42,4 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - ${WEB_APP_ENV_FILE:-../web-application/config/.env.production}:/usr/src/app/.env.production
+      - ./config/web-application/env.production:/usr/src/app/.env.production
