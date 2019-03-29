@@ -16,10 +16,11 @@ services:
     image: mongo:3.4-jessie
 
   api-server:
-    image: <PATH_TO_IMAGE>
+    image: 630080580277.dkr.ecr.eu-west-1.amazonaws.com/api-server-local:0.1
     container_name: api-server
     hostname: api-server
     restart: always
+    privileged: true
     ports:
       - '3002:3002'
     env_file:
@@ -29,13 +30,14 @@ services:
       - IP=0.0.0.0
       - PATH_PREFIX=/api/v1
       - RUN_MODE=production
-
     volumes:
       - user_data:/home/deploit/data
       - ${LOCAL_DATA_DIR:-~/}:/input_data
+    depends_on:
+      - mongo
 
   web-application:
-    image: <PATH_TO_IMAGE>
+    image: 630080580277.dkr.ecr.eu-west-1.amazonaws.com/web-application-local:0.1
     container_name: web-application
     environment:
       - RUN_MODE=production
