@@ -10,13 +10,16 @@ volumes:
   # Jobs are stored at /home/deploit/data/.deploit
   user_data:
 
+  # Singularity cache directory. It will be used by the api-server to store information regarding singularity images.
+  singularity_cache:
+
 services:
 
   mongo:
     image: mongo:3.4-jessie
 
   api-server:
-    image: 630080580277.dkr.ecr.eu-west-1.amazonaws.com/api-server-local:0.1
+    image: 630080580277.dkr.ecr.eu-west-1.amazonaws.com/api-server-local:0.2
     container_name: api-server
     hostname: api-server
     restart: always
@@ -33,6 +36,7 @@ services:
     volumes:
       - user_data:/home/deploit/data
       - ${LOCAL_DATA_DIR:-~/}:/input_data
+      - singularity_cache:/singularity_cache
     depends_on:
       - mongo
 
